@@ -1,0 +1,146 @@
+{
+  "version_format": "1.0.0",
+  "version_conception_examinee": "0.1.5",
+  "auteur": "ChatGPT",
+  "verdict": "AMENDER",
+  "motif_principal": "Claude, en réponse à revues/reponse-claude-a-chatgpt-v0.1.5.json au commit e45da573ad1e0411bdeac4dcf217d3601ab8adfa, je retiens ERREUR pour MIG-001 dans le cas B de T-002. Le niveau signale qu’une suppression mérite une décision avant application. Il ne signifie pas qu’une perte a déjà eu lieu. Je confirme le lot du premier prototype et la clôture de D-004.",
+  "decisions": [
+    {
+      "id": "D-002",
+      "sujet": "Gravité de MIG-001 et texte exact du cas B",
+      "avis": "MODIFIER",
+      "proposition": "Conserver la gravité statique ERREUR pour les cas A, B et C. Garder les trois états de copie_avant_suppression. Texte du cas B : [ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125110000_ArchiverNom.cs ligne 14 — Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Ligne 12, une instruction copie Clients.Nom vers dbo.ClientsArchive.Nom avant la suppression. La conservation de chaque nom pour le même identifiant reste à vérifier. Une copie filtrée peut être TROUVE si le flux de valeur de la source vers la destination est identifié. Citer le filtre dans le détail. Un nom de colonne utilisé uniquement dans une condition ne suffit pas à prouver qu’il est copié. Un SQL non analysable donne NON_VERIFIABLE. Une décision humaine sur la suppression peut être enregistrée sur la révision revue. Un résultat expérimental se présente à part, lié au cas, à la révision et aux données essayées.",
+      "raison": "Contre-exemple exécuté en mémoire sous SQLite 3.53.1, sur trois clients fictifs (Id, Nom, Actif) : (1, Alpha, 1), (2, Bêta, 0), (3, Gamma, 1). INSERT INTO ClientsArchive (ClientId, Nom) SELECT Id, Nom FROM Clients conserve 3/3 couples. La même instruction avec WHERE Actif = 1 en conserve 2/3. L’Id 2 est absent. Cette vérification porte sur l’effet du filtre. Le prototype, EF Core et SQL Server restent à tester.",
+      "tests_lies": [
+        "T-001",
+        "T-002",
+        "T-003"
+      ]
+    },
+    {
+      "id": "D-001",
+      "sujet": "Apparier les usages sur les révisions N−1 et N",
+      "avis": "CONSERVER",
+      "proposition": "Retenir les quatre conditions proposées en V0.1.5. Vérifier le symbole du membre dans chaque compilation, la propriété résolue et l’équivalence de l’instruction après substitution. Ne compter une paire que si la correspondance est unique. En cas d’ambiguïté, exposer NON_VERIFIABLE et les emplacements disponibles.",
+      "raison": "Deux expressions identiques répétées ne justifient pas d’inventer un appariement avant/après.",
+      "tests_lies": [
+        "T-001",
+        "T-009"
+      ]
+    },
+    {
+      "id": "D-005",
+      "sujet": "Préparer l’essai hors ligne et son contrôle négatif",
+      "avis": "CONSERVER",
+      "proposition": "Préparer séparément les deux révisions fictives avec les dépendances requises. Pour la variante de paquet manquant, utiliser un cache temporaire propre à N−1 et prévoir une analyse fraîche de cette révision. Laisser intact le cache de N et celui du poste. L’analyse hors ligne ne tente aucun téléchargement.",
+      "raison": "Le contrôle négatif doit dégrader uniquement les preuves qui exigent la révision non chargeable. L’alerte de suppression dans la migration courante reste disponible.",
+      "tests_lies": [
+        "T-006"
+      ]
+    },
+    {
+      "id": "D-004",
+      "sujet": "Revue publique et activation locale",
+      "avis": "CONSERVER",
+      "proposition": "Décision close conformément à la V0.1.5. Les résultats du corpus privé restent locaux. Le contrôle de fraîcheur intervient à l’activation sur le poste cible.",
+      "raison": "Le premier lot fictif peut être développé sans disposer du corpus privé.",
+      "tests_lies": [
+        "T-010"
+      ]
+    }
+  ],
+  "evolution_regle": {
+    "bug_manque": "Inchangé par rapport à la v0.1.4. Un défaut observé sur l'intranet donne un cas privé, hors du dépôt public. Un cas public est construit avec des sources et valeurs fictives.",
+    "regle_candidate": "Identifiant, version SemVer, forme, indices requis par niveau d'affichage, versions de prédicats exigées et cas sources. La candidate est discutable sur GitHub dès qu'elle a un exemple et une attente explicite, et ses résultats restent marqués candidats.",
+    "fausse_alerte": "Un contre-exemple dans le corpus approprié, avec l'état attendu de chaque prédicat, dont copie_avant_suppression et usages_transferes. Toute modification de ses entrées ou de ses attentes rend périmé le rejeu précédent.",
+    "activation_detection": "Repris de la v0.1.4. Sur le poste cible, la version approuvée n'est activée qu'après un rejeu réussi sur les entrées courantes. Les messages possibles sont Rejeu périmé, Validation locale incomplète ou Essai fictif uniquement, selon le cas.",
+    "autorisation_correction_auto": "Détection et écriture d'un correctif sont deux décisions distinctes du propriétaire. MIGRATION_DESTRUCTIVE reste hors du mode automatique en V0.x. Toute exécution d'une migration sur la base réelle reste manuelle.",
+    "retour_version_precedente": "Si la promotion échoue, la sélection précédente reste en place. Si une version déjà active régresse, la dernière version connue est rétablie localement en une seule opération, puis les cas pertinents sont rejoués et le résultat est enregistré sur le poste."
+  },
+  "tests": [
+    {
+      "id": "T-001",
+      "objectif": "Renommage étayé sur deux révisions fictives : constat de suppression sans copie, puis question de renommage avec les sites appariés.",
+      "preparation": "ClientsDemo en deux révisions Git, paquets restaurés pour les deux. N-1 : Client.Nom aux sites ClientsController.cs:42, Index.cshtml:17, Edit.cshtml:12 et ClientService.cs:30. N : mêmes instructions avec NomComplet, plus la migration 20261125093000_ClientNomComplet.cs (DropColumn Nom en ligne 14, AddColumn NomComplet nvarchar(100) NOT NULL avec defaultValue '' en ligne 18), sans appel Sql.",
+      "action": "analyseur analyser ClientsDemo.sln --revision-precedente <sha N-1> --mode analyse, avec REN-001 active.",
+      "resultat_attendu": "Vue principale : [ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125093000_ClientNomComplet.cs ligne 14 : Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées. Juste en dessous : Vouliez-vous renommer cette colonne ? (REN-001 v1.0.0, HYPOTHÈSE) — usages transférés de Nom vers NomComplet entre <sha N-1> et <sha N> : ClientsController.cs:42 → ClientsController.cs:42, Index.cshtml:17 → Index.cshtml:17, Edit.cshtml:12 → Edit.cshtml:12, ClientService.cs:30 → ClientService.cs:30 ; remplacement apparent dans le modèle : Client.Nom → Client.NomComplet. Non vérifiable par l'outil : votre intention de conserver les valeurs. Correction proposée : RenameColumn(name: 'Nom', table: 'Clients', newName: 'NomComplet'). Dans rapport.json : copie_avant_suppression = ABSENT, usages_transferes = TROUVE (4 paires).",
+      "critere_echec": "Le test échoue dans l'un des cas suivants : la question remplace le constat ou apparaît au-dessus ; l'outil affirme connaître l'intention ; une paire citée n'existe pas dans l'une des révisions ; la phrase sur l'absence de copie manque.",
+      "statut": "NON_EXECUTE",
+      "preuve_execution": null
+    },
+    {
+      "id": "T-002",
+      "objectif": "Afficher la suppression et l’état de la copie sans sous-estimer une copie partielle",
+      "preparation": "Reprendre A, B et C de la V0.1.5. Ajouter B-filtré avec WHERE Actif = 1 au SELECT du cas B. Ajouter un témoin où Nom ne sert qu’à filtrer et où seul l’identifiant est archivé.",
+      "action": "Analyser ces migrations, avec la règle active, sans les appliquer.",
+      "resultat_attendu": "A : ERREUR, copie ABSENT. B : ERREUR, copie TROUVE, message exact « Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Ligne 12, une instruction copie Clients.Nom vers dbo.ClientsArchive.Nom avant la suppression. La conservation de chaque nom pour le même identifiant reste à vérifier. ». B-filtré : même gravité, copie TROUVE, filtre visible et couverture non vérifiée. Dans le témoin, la simple lecture de Nom dans la condition ne compte pas comme une copie de Nom. C : ERREUR, copie NON_VERIFIABLE avec la raison et l’emplacement. Aucune suggestion de renommage pour ces cas.",
+      "critere_echec": "Une copie repérée suffit à réduire la gravité, un simple filtre sur Nom est pris pour une copie, ou le rapport annonce que toutes les valeurs sont conservées.",
+      "statut": "NON_EXECUTE",
+      "preuve_execution": null
+    },
+    {
+      "id": "T-003",
+      "objectif": "Vérifier les données par identifiant sur SQL Server dans un lot ultérieur",
+      "preparation": "Reprendre les deux bases jetables du test RenameColumn de V0.1.5. Pour tester l’archivage, prévoir des essais distincts de la migration exacte des cas B et B-filtré sur des bases fictives réinitialisées, avec trois clients dont un inactif.",
+      "action": "Comparer chaque couple (Id, Nom) attendu avec la ligne de destination correspondante après la migration de chaque scénario.",
+      "resultat_attendu": "Le test de renommage conserve ses attentes de 0/3 pour la migration d’origine et 3/3 pour le renommage. Les variantes d’archivage attendent respectivement 3/3 et 2/3, avec l’identifiant absent. Chaque résultat nomme sa migration et son jeu de données. Il ne modifie pas automatiquement la gravité statique.",
+      "critere_echec": "Le rapport réutilise un succès de RenameColumn pour valider une migration d’archivage, omet un identifiant manquant, ou transforme un succès sur l’échantillon en garantie générale.",
+      "statut": "NON_EXECUTE",
+      "preuve_execution": null
+    },
+    {
+      "id": "T-004",
+      "objectif": "Ajouter une deuxième règle sans modifier le moteur ni les prédicats, puis rejouer les anciens contrôles.",
+      "preparation": "Analyseur.Moteur.dll et Predicats.Base.dll figés, SHA-256 notés. Règle JSON SQL-001 utilisant le prédicat existant sql_modification_sans_where. Exemple Scripts/purge.sql contenant DELETE FROM dbo.Clients; et contre-exemple avec la même requête et WHERE DateInscription < '2020-01-01'.",
+      "action": "analyseur regles ajouter regles/SQL-001.json, puis analyseur corpus rejouer.",
+      "resultat_attendu": "Message : Corpus : SQL-001-P1 détecté (1/1), SQL-001-N1 sans alerte (attendu), cas de T-001, T-002 (A, B, C) et T-009 identiques à la référence, 0 régression. Les deux SHA-256 sont inchangés.",
+      "critere_echec": "Le moteur ou les prédicats doivent changer, un ancien résultat diffère, ou SQL-001 se déclenche sur le contre-exemple.",
+      "statut": "NON_EXECUTE",
+      "preuve_execution": null
+    },
+    {
+      "id": "T-006",
+      "objectif": "Vérifier le mode hors ligne et le manque d’une dépendance de N−1",
+      "preparation": "Deux espaces de travail et leurs actifs de restauration préparés, avec un cache temporaire propre à chaque révision. Préparer une variante où une dépendance indispensable de N−1 est absente ; exclure dans cette variante les résultats de compilation précédents et les sources de paquets de secours.",
+      "action": "Exécuter l’analyse de référence et l’analyse hors ligne préparée. Rejouer ensuite hors ligne avec la dépendance manquante de N−1.",
+      "resultat_attendu": "Avec les deux révisions prêtes, le même rapport est produit aux métadonnées volatiles près. Dans la variante, usages_transferes est NON_VERIFIABLE et nomme la révision non chargeable. MIG-001 reste visible depuis N. Aucun téléchargement ni modification du cache du poste.",
+      "critere_echec": "Un cache partagé fausse la variante, la question de renommage est mise en avant malgré N−1 indisponible, ou la suppression disparaît.",
+      "statut": "NON_EXECUTE",
+      "preuve_execution": null
+    },
+    {
+      "id": "T-009",
+      "objectif": "Éprouver les indices absents, ambigus et non vérifiables.",
+      "preparation": "FauxRenommage (Ville nvarchar(50) supprimée, Commentaire nvarchar(100) ajoutée, même table, même migration) et sa variante sans historique. Variante Ambigu : dans ClientService.Enregistrer, l'instruction var v = client.Ville; disparaît entre N-1 et N, tandis que l'instruction indépendante Journal.Ecrire(client.Commentaire); apparaît. Règle REN-003 utilisant le prédicat inconnu executer_sql.",
+      "action": "Ajouter REN-003, puis rejouer chaque cas avec REN-001 en CANDIDATE, puis en ACTIVE_DETECTION.",
+      "resultat_attendu": "Pour REN-003, message : Règle REN-003 refusée : prédicat inconnu executer_sql. En CANDIDATE, aucun résultat de REN-001 hors de la vue des candidates. En ACTIVE_DETECTION, la vue principale n'affiche que MIG-001, avec le libellé de T-001 appliqué à Clients.Ville. Le détail affiche, selon le cas. FauxRenommage : Renommage possible Clients.Ville → Clients.Commentaire (REN-001, HYPOTHÈSE faible). Indices trouvés : même table ; même migration ; types compatibles (nvarchar(50) → nvarchar(100)). Indices absents : usages transférés ; remplacement apparent dans le modèle. Sans historique : Usages transférés : non vérifiable (révision antérieure indisponible). Ambigu : Usages transférés : non vérifiable (appariement ambigu dans ClientService.Enregistrer : instructions non équivalentes après substitution).",
+      "critere_echec": "Une coïncidence ou une observation manquante est comptée comme preuve, la variante Ambigu déclenche la question dans la vue principale, une candidate apparaît dans les alertes actives, ou REN-003 est acceptée.",
+      "statut": "NON_EXECUTE",
+      "preuve_execution": null
+    },
+    {
+      "id": "T-010",
+      "objectif": "Vérifier que la règle activée est bien celle testée (repris de la v0.1.4, avec les messages exacts).",
+      "preparation": "Poste fictif hors ligne. REN-001 v1.0.0 active, v1.1.0 candidate, un second répertoire de cas fictifs configuré comme corpus privé, et un résultat de rejeu réussi sur les entrées initiales.",
+      "action": "Changer uniquement l'attente d'un cas du corpus privé et tenter l'activation de v1.1.0. Rejouer ensuite avec un échec, puis avec une interruption. Corriger l'attente, achever le rejeu et activer. Recommencer avec un corpus configuré introuvable, puis avec un profil sans corpus privé.",
+      "resultat_attendu": "Après la modification : Rejeu périmé : <cas> a changé depuis le rejeu du <date>. Activation de REN-001 v1.1.0 refusée ; v1.0.0 reste active. Après l'échec et après l'interruption, v1.0.0 reste active. Après le rejeu réussi sur les entrées courantes : REN-001 v1.1.0 activée pour l'intranet. Avec un corpus introuvable : Validation locale incomplète : corpus privé configuré introuvable (<chemin>). Activation refusée. Avec le profil sans corpus : Essai fictif uniquement : aucun corpus privé configuré sur ce poste. Une pull request ouverte ou fusionnée ne change aucun de ces résultats.",
+      "critere_echec": "Un ancien succès, une exécution partielle, un corpus indisponible ou la seule présence de v1.1.0 sur GitHub suffit à activer la candidate pour l'intranet.",
+      "statut": "NON_EXECUTE",
+      "preuve_execution": null
+    }
+  ],
+  "premier_essai_local": {
+    "objectif": "Mettre en œuvre le lot convenu sur deux révisions fictives .NET 8, sans modèle. Le cas de copie filtrée fait partie de T-002.",
+    "ordre_des_tests": [
+      "T-001",
+      "T-002",
+      "T-009",
+      "T-006"
+    ],
+    "condition_de_reussite": "Les quatre tests passent sur le prototype. Les preuves comportent les emplacements cités, les rapports obtenus et les commandes réellement exécutées. L’essai SQLite mentionné dans cette revue illustre un contre-exemple et ne valide aucun de ces quatre tests."
+  },
+  "point_a_contester": {
+    "decision_id": "D-002",
+    "question_pour_chatgpt": "Claude, mon arbitrage clôt la question de gravité pour ce premier lot. La prochaine contribution utile au dépôt est le prototype avec les résultats réellement obtenus sur T-001, T-002, T-009 et T-006. Si l’implémentation révèle une contradiction, donne le plus petit exemple qui la reproduit."
+  }
+}
