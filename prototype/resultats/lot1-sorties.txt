@@ -1,0 +1,179 @@
+Sorties réelles de l'outil sur les dépôts fictifs créés par les tests (Linux, .NET SDK 8.0.134, 2026-11-25T18:18Z).
+Commande : analyseur analyser ClientsDemo.sln --revision-precedente <sha N-1> --regles prototype/regles
+
+################ T-001-renommage
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : 767cd1c ; révision précédente : e0d65e1.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125093000_ClientNomComplet.cs ligne 14 : Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées.
+    Vouliez-vous renommer cette colonne ? (REN-001 v1.0.0, HYPOTHÈSE) — usages transférés de Nom vers NomComplet entre e0d65e1 et 767cd1c : ClientService.cs:30 → ClientService.cs:30, ClientsController.cs:42 → ClientsController.cs:42, Edit.cshtml:12 → Edit.cshtml:12, Index.cshtml:17 → Index.cshtml:17 ; remplacement apparent dans le modèle : Client.Nom → Client.NomComplet. Non vérifiable par l'outil : votre intention de conserver les valeurs. Correction proposée : RenameColumn(name: 'Nom', table: 'Clients', newName: 'NomComplet').
+
+== Détail ==
+Aucun détail.
+
+== Règles évaluées sans alerte ==
+Aucune.
+
+== Candidates ==
+Aucune.
+
+################ T-002-A-fax
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : a8adbcf ; révision précédente : 1de6b6f.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125100000_FaxVersDateInscription.cs ligne 14 : Cette migration supprime la colonne Clients.Fax. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées.
+
+== Détail ==
+Aucun détail.
+
+== Règles évaluées sans alerte ==
+REN-001 v1.0.0 non déclenchée — types_compatibles : ABSENT (nvarchar(20) / datetime2).
+
+== Candidates ==
+Aucune.
+
+################ T-002-B-archive
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : 93a4827 ; révision précédente : f0a65f3.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125110000_ArchiverNom.cs ligne 14 : Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Ligne 12, une instruction copie Clients.Nom vers dbo.ClientsArchive.Nom avant la suppression. La conservation de chaque valeur pour le même identifiant reste à vérifier.
+
+== Détail ==
+Aucun détail.
+
+== Règles évaluées sans alerte ==
+REN-001 v1.0.0 non déclenchée — aucune paire suppression/ajout dans les migrations analysées.
+
+== Candidates ==
+Aucune.
+
+################ T-002-B-filtre
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : 87d3075 ; révision précédente : bfbd25d.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125110000_ArchiverNom.cs ligne 14 : Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Ligne 12, une instruction copie Clients.Nom vers dbo.ClientsArchive.Nom avant la suppression. La conservation de chaque valeur pour le même identifiant reste à vérifier.
+
+== Détail ==
+MIG-001 — Migrations/20261125110000_ArchiverNom.cs ligne 14 :
+    Filtre appliqué à la copie : WHERE Actif = 1. La couverture de la copie n'est pas vérifiée.
+
+== Règles évaluées sans alerte ==
+REN-001 v1.0.0 non déclenchée — aucune paire suppression/ajout dans les migrations analysées.
+
+== Candidates ==
+Aucune.
+
+################ T-002-temoin
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : dc50dc8 ; révision précédente : af213af.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125110000_ArchiverNom.cs ligne 14 : Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées.
+
+== Détail ==
+MIG-001 — Migrations/20261125110000_ArchiverNom.cs ligne 14 :
+    Clients.Nom est lu ligne 12 dans une condition, sans être copié.
+
+== Règles évaluées sans alerte ==
+REN-001 v1.0.0 non déclenchée — aucune paire suppression/ajout dans les migrations analysées.
+
+== Candidates ==
+Aucune.
+
+################ T-002-C-dynamique
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : ad486a7 ; révision précédente : cc5169a.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125110000_ArchiverNom.cs ligne 14 : Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Copie avant la suppression : non vérifiable (texte SQL construit dynamiquement, ligne 12). Vérifiez où elles doivent être conservées.
+
+== Détail ==
+Aucun détail.
+
+== Règles évaluées sans alerte ==
+REN-001 v1.0.0 non déclenchée — aucune paire suppression/ajout dans les migrations analysées.
+
+== Candidates ==
+Aucune.
+
+################ T-009-faux-renommage
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : 4ed5c21 ; révision précédente : 2610f90.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125120000_VilleVersCommentaire.cs ligne 14 : Cette migration supprime la colonne Clients.Ville. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées.
+
+== Détail ==
+MIG-001 — Migrations/20261125120000_VilleVersCommentaire.cs ligne 14 :
+    Renommage possible Clients.Ville → Clients.Commentaire (REN-001 v1.0.0, HYPOTHÈSE faible). Indices trouvés : même table ; même migration ; types compatibles (nvarchar(50) → nvarchar(100)). Indices absents : usages transférés ; remplacement apparent dans le modèle.
+
+== Règles évaluées sans alerte ==
+Aucune.
+
+== Candidates ==
+Aucune.
+
+################ T-009-ambigu
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : 59da807 ; révision précédente : 9725c3d.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125120000_VilleVersCommentaire.cs ligne 14 : Cette migration supprime la colonne Clients.Ville. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées.
+
+== Détail ==
+MIG-001 — Migrations/20261125120000_VilleVersCommentaire.cs ligne 14 :
+    Renommage possible Clients.Ville → Clients.Commentaire (REN-001 v1.0.0, HYPOTHÈSE faible). Indices trouvés : même table ; même migration ; types compatibles (nvarchar(50) → nvarchar(100)). Indices absents : remplacement apparent dans le modèle. Usages transférés : non vérifiable (appariement ambigu dans ClientService.Enregistrer : instructions non équivalentes après substitution).
+
+== Règles évaluées sans alerte ==
+Aucune.
+
+== Candidates ==
+Aucune.
+
+################ T-006-variante
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : 4e9b963 ; révision précédente : fb4c52b.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125093000_ClientNomComplet.cs ligne 14 : Cette migration supprime la colonne Clients.Nom. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées.
+
+== Détail ==
+MIG-001 — Migrations/20261125093000_ClientNomComplet.cs ligne 14 :
+    Renommage possible Clients.Nom → Clients.NomComplet (REN-001 v1.0.0, HYPOTHÈSE faible). Indices trouvés : même table ; même migration ; types compatibles (nvarchar(100) → nvarchar(100)) ; remplacement apparent dans le modèle (Client.Nom → Client.NomComplet). Usages transférés : non vérifiable (restauration des paquets impossible hors ligne pour fb4c52b).
+
+== Règles évaluées sans alerte ==
+Aucune.
+
+== Candidates ==
+Aucune.
+
+################ T-009-faux-renommage sans historique
+Assistant indisponible : explications désactivées.
+Règles actives exécutées depuis regles.lock.json (hors dépôt Git ou modifié depuis le dernier commit).
+Révision analysée : 4ed5c21 ; révision précédente : révision antérieure indisponible.
+
+== Vue principale ==
+[ERREUR][CONSTAT] MIG-001 v1.0.0 — Migrations/20261125120000_VilleVersCommentaire.cs ligne 14 : Cette migration supprime la colonne Clients.Ville. Après son application, ses valeurs ne seront plus accessibles dans cette colonne. Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées.
+
+== Détail ==
+MIG-001 — Migrations/20261125120000_VilleVersCommentaire.cs ligne 14 :
+    Renommage possible Clients.Ville → Clients.Commentaire (REN-001 v1.0.0, HYPOTHÈSE faible). Indices trouvés : même table ; même migration ; types compatibles (nvarchar(50) → nvarchar(100)). Usages transférés : non vérifiable (révision antérieure indisponible). Remplacement apparent dans le modèle : non vérifiable (révision antérieure indisponible).
+
+== Règles évaluées sans alerte ==
+Aucune.
+
+== Candidates ==
+Aucune.

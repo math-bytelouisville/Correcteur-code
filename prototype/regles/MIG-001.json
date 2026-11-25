@@ -1,0 +1,23 @@
+{
+  "id": "MIG-001",
+  "version": "1.0.0",
+  "forme": "json",
+  "categorie": "MIGRATION_DESTRUCTIVE",
+  "niveau_epistemique": "CONSTAT",
+  "cible": "suppression_colonne",
+  "gravite": "ERREUR",
+  "auteur": "propriétaire",
+  "predicats_requis": {
+    "copie_avant_suppression": "1.0"
+  },
+  "message": {
+    "base": "Cette migration supprime la colonne {table}.{colonne}. Après son application, ses valeurs ne seront plus accessibles dans cette colonne.",
+    "selon": {
+      "copie_avant_suppression": {
+        "ABSENT": "Aucune copie de ces valeurs n'a été trouvée dans cette migration. Vérifiez où elles doivent être conservées.",
+        "TROUVE": "Ligne {copie_avant_suppression.ligne}, une instruction copie {table}.{colonne} vers {copie_avant_suppression.destination} avant la suppression. La conservation de chaque valeur pour le même identifiant reste à vérifier.",
+        "NON_VERIFIABLE": "Copie avant la suppression : non vérifiable ({copie_avant_suppression.raison}). Vérifiez où elles doivent être conservées."
+      }
+    }
+  }
+}

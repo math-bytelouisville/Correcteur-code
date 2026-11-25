@@ -1,0 +1,24 @@
+{
+  "id": "REN-001",
+  "version": "1.0.0",
+  "forme": "json",
+  "categorie": "MIGRATION_DESTRUCTIVE",
+  "niveau_epistemique": "HYPOTHESE",
+  "cible": "paire_suppression_ajout",
+  "auteur": "propriétaire",
+  "predicats_requis": {
+    "meme_table": "1.0",
+    "meme_migration": "1.0",
+    "types_compatibles": "1.0",
+    "usages_transferes": "1.0",
+    "remplacement_apparent_dans_modele": "1.0"
+  },
+  "rattachement": "MIG-001",
+  "conditions_obligatoires": ["meme_table", "meme_migration", "types_compatibles"],
+  "affichage_principal_si": ["usages_transferes"],
+  "indices_complementaires": ["remplacement_apparent_dans_modele"],
+  "intitule_detail": "Renommage possible {table}.{ancienne} → {table}.{nouvelle}",
+  "question_principale": "Vouliez-vous renommer cette colonne ?",
+  "inconnu": "votre intention de conserver les valeurs",
+  "correction": "RenameColumn(name: '{ancienne}', table: '{table}', newName: '{nouvelle}')"
+}

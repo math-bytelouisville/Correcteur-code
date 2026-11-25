@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>analyseur</AssemblyName>
+    <RootNamespace>Analyseur.Cli</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Analyseur.Moteur\Analyseur.Moteur.csproj" />
+    <!-- Le moteur ne référence pas les prédicats : ils sont découverts au chargement (Predicats.*.dll). -->
+    <ProjectReference Include="..\Predicats.Base\Predicats.Base.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\regles\*.json" Link="regles\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

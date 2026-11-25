@@ -1,0 +1,13 @@
+@model Client
+@{
+    ViewData["Title"] = "Modifier un client";
+}
+
+<h1>Modifier le client @Model.Id</h1>
+
+<form method="post">
+    <label for="saisie">Nom</label>
+    <input id="saisie" name="saisie" />
+    <button type="submit">Enregistrer</button>
+    <p>Valeur actuelle : @Model.Nom</p>
+</form>

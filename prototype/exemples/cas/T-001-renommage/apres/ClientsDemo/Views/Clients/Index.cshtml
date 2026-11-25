@@ -1,0 +1,21 @@
+@model IEnumerable<Client>
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<h1>Clients</h1>
+
+<table>
+    <thead>
+        <tr><th>Identifiant</th><th>Nom</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.NomComplet</td>
+        </tr>
+    }
+    </tbody>
+</table>

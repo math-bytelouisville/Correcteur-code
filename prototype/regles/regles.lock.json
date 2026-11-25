@@ -1,0 +1,18 @@
+{
+  "regles": [
+    {
+      "id": "MIG-001",
+      "version": "1.0.0",
+      "fichier": "MIG-001.json",
+      "etat": "ACTIVE_DETECTION",
+      "sha256": "6f4d8c90c48683dade4a99a24a60bc27238608a60b8e6e1bdb55465346cef7fc"
+    },
+    {
+      "id": "REN-001",
+      "version": "1.0.0",
+      "fichier": "REN-001.json",
+      "etat": "ACTIVE_DETECTION",
+      "sha256": "49eb85a40d61655a0ce8a716138ff0fab1401e423c760147c4e64c1d567ee5dd"
+    }
+  ]
+}
